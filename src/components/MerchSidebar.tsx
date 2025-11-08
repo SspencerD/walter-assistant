@@ -46,14 +46,14 @@ export function MerchSidebar() {
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-brand-orange" />
+          <Sparkles className="w-5 h-5 text-brand-orange" />
           <h3 className="font-semibold">Recomendado para ti</h3>
         </div>
         {[1, 2, 3].map((i) => (
           <Card key={i} className="p-4">
-            <Skeleton className="h-24 w-full mb-3" />
-            <Skeleton className="h-4 w-3/4 mb-2" />
-            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="w-full h-24 mb-3" />
+            <Skeleton className="w-3/4 h-4 mb-2" />
+            <Skeleton className="w-1/2 h-4" />
           </Card>
         ))}
       </div>
@@ -63,21 +63,21 @@ export function MerchSidebar() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
-        <Sparkles className="h-5 w-5 text-brand-orange" />
+        <Sparkles className="w-5 h-5 text-brand-orange" />
         <h3 className="font-semibold">Recomendado para ti</h3>
       </div>
 
       {items.map((item) => (
-        <Card key={item.id} className="p-4 hover:shadow-md transition-shadow">
+        <Card key={item.id} className="p-4 transition-shadow hover:shadow-md">
           {item.preview_url && (
             <img
               src={item.preview_url}
               alt={item.name}
-              className="w-full h-32 object-cover rounded-lg mb-3"
+              className="object-cover w-full h-32 mb-3 rounded-lg"
             />
           )}
-          <h4 className="font-medium text-sm mb-1">{item.name}</h4>
-          <p className="text-xs text-muted-foreground mb-2">{item.description}</p>
+          <h4 className="mb-1 text-sm font-medium">{item.name}</h4>
+          <p className="mb-2 text-xs text-muted-foreground">{item.description}</p>
           <div className="flex items-center justify-between">
             <span className="font-bold text-primary">{formatCurrency(item.price_cents)}</span>
             <Button
@@ -85,7 +85,7 @@ export function MerchSidebar() {
               onClick={() => handleAddToCart(item)}
               className="gap-1"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="w-4 h-4" />
               Agregar
             </Button>
           </div>

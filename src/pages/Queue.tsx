@@ -90,15 +90,15 @@ const handleProceedToSeats = () => {
 
 return (
 	<div className="min-h-screen bg-gradient-subtle">
-		<div className="container max-w-7xl mx-auto px-4 py-8">
+		<div className="container px-4 py-8 mx-auto max-w-7xl">
 			<div className="grid lg:grid-cols-[1fr,320px] gap-6">
 				{/* Main Content */}
 				<div className="space-y-6">
 					{/* Event Header */}
-					<Card className="p-6 bg-gradient-primary text-white">
-						<h1 className="text-3xl font-bold mb-2">Gran Arena Monticello</h1>
-						<p className="text-white/90 flex items-center gap-2">
-							<Clock className="h-4 w-4" />
+					<Card className="p-6 text-white bg-gradient-primary">
+						<h1 className="mb-2 text-3xl font-bold">Gran Arena Monticello</h1>
+						<p className="flex items-center gap-2 text-white/90">
+							<Clock className="w-4 h-4" />
 							15 de Diciembre, 2025 - 20:00
 						</p>
 					</Card>
@@ -106,9 +106,9 @@ return (
 					{/* Queue Status */}
 					{!queue ? (
 						<Card className="p-8 text-center">
-							<Users className="h-16 w-16 mx-auto mb-4 text-primary" />
-							<h2 className="text-2xl font-bold mb-3">Únete a la fila virtual</h2>
-							<p className="text-muted-foreground mb-6">
+							<Users className="w-16 h-16 mx-auto mb-4 text-primary" />
+							<h2 className="mb-3 text-2xl font-bold">Únete a la fila virtual</h2>
+							<p className="mb-6 text-muted-foreground">
 								Asegura tu lugar sin esperar físicamente. Te avisaremos cuando sea tu turno.
 							</p>
 							<Button
@@ -130,7 +130,7 @@ return (
 							<Card className="p-6">
 								<div className="flex items-center justify-between mb-4">
 									<div>
-										<p className="text-sm text-muted-foreground mb-1">Tu posición en la fila</p>
+										<p className="mb-1 text-sm text-muted-foreground">Tu posición en la fila</p>
 										<div className="flex items-baseline gap-2">
 											<span className="text-5xl font-bold text-primary">{queue.position}</span>
 											<Badge variant={queue.status === 'notified' ? 'default' : 'secondary'}>
@@ -173,7 +173,7 @@ return (
 									<div className="flex items-center gap-3">
 										<MessageCircle className={`h-5 w-5 ${whatsappConnected ? 'text-success' : 'text-muted-foreground'}`} />
 										<div>
-											<p className="font-medium text-sm">
+											<p className="text-sm font-medium">
 												{whatsappConnected ? 'WhatsApp conectado' : 'Conectar WhatsApp'}
 											</p>
 											<p className="text-xs text-muted-foreground">
@@ -184,7 +184,7 @@ return (
 										</div>
 									</div>
 									{whatsappConnected ? (
-										<Check className="h-5 w-5 text-success" />
+										<Check className="w-5 h-5 text-success" />
 									) : (
 										<Button
 											size="sm"
