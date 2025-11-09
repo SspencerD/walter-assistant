@@ -11,6 +11,8 @@ import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import Home from "@/pages/Home";
+import { EventInformation } from "@/components/EventInformation";
 
 const queryClient = new QueryClient();
 
@@ -24,9 +26,10 @@ const App = () => (
           <Navbar />
           <main className="flex-1">
             <Routes>
-              <Route path="/" element={<Navigate to="/queue" replace />} />
+              <Route path="/" element={<Home/>} />
               <Route path="/queue" element={<Queue />} />
-              <Route path="/advisor" element={<Advisor />} />
+            <Route path="/advisor" element={<Advisor />} />
+            <Route path="/event/:id" element={<EventInformation/>} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/checkout" element={<Checkout />} />

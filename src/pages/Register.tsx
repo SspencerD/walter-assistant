@@ -18,6 +18,7 @@ import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { formatearRut } from "@/lib/rutFormat";
+import { format } from "date-fns";
 
 const rutRegex = /^(\d{1,3}(?:\.\d{3}){2}-(\d{1}|[kK]))|(\d{1,3}(?:\d{3}){2}-(\d{1}|[kK]))$/;
 
@@ -31,7 +32,7 @@ const registerSchema = zod.object({
     .string()
     .min(2, "El apellido debe tener al menos 2 caracteres")
     .max(100, "El apellido debe tener como máximo 100 caracteres"),
-  birthdate: zod
+  birthday: zod
     .string()
     .min(10, "La fecha de nacimiento debe tener 10 caracteres")
     .max(10, "La fecha de nacimiento debe tener 10 caracteres"),
@@ -76,6 +77,13 @@ const registerSchema = zod.object({
         message: "RUT inválido. Ej: 12.345.678-9",
       });
       return;
+    }
+    if(data.password !== data.confirmPassword){
+      ctx.addIssue({
+        code: zod.ZodIssueCode.custom,
+        path: ["confirmPassword"],
+        message: "Las contraseñas no coinciden",
+      });
     }
     // 2) (Opcional) Dígito verificador
     const clean = data.documentNumber.replace(/\./g, "").toUpperCase(); // 12345678-9
@@ -136,7 +144,7 @@ const documentTypeOptions = [
 interface RegisterForm {
   name: string;
   lastname: string;
-  birthdate: string;
+  birthday: string;
   country: string;
   phonePrefix: string;
   phoneNumber: string;
@@ -176,7 +184,7 @@ export default function Register() {
     defaultValues: {
       name: "",
       lastname: "",
-      birthdate: "",
+      birthday: "",
       country: "",
       phonePrefix: "+56",
       phoneNumber: "",
@@ -196,9 +204,30 @@ export default function Register() {
 
   function onSubmit(data: RegisterForm) {
     console.log('Form data:', data); // Para debug
-    const {confirmPassword, ...submitData} = data; // Excluir confirmPassword
-    mutate(submitData);
-    
+    const {confirmPassword,birthday, ...submitData} = data;
+    // Asegurarnos de que birthday sea una fecha válida antes de formatear
+    if (!birthday) {
+      console.error('Fecha de nacimiento no válida');
+      return;
+    }
+    try {
+      // Convertir de DD-MM-YYYY a YYYY-MM-DD
+      const [day, month, year] = birthday.split('-');
+      const formattedDate = `${year}-${month}-${day}`;
+      const date = new Date(formattedDate);
+      
+      if (isNaN(date.getTime())) {
+        console.error('Fecha de nacimiento no válida');
+        return;
+      }
+      const birthDates = format(date, 'yyyy-MM-dd');
+      const payload = {...submitData, birthday: birthDates};
+      console.log('Payload data:', payload); // Para debug
+      mutate(payload);
+    } catch (error) {
+      console.error('Error al procesar la fecha:', error);
+    }
+
   }
 
   return (
@@ -241,10 +270,10 @@ export default function Register() {
                 placeholder="YYYY-MM-DD"
                 onChange={(date) => {
                   const event = {
-                    target: { value: date, name: "birthdate" },
+                    target: { value: date, name: "birthday" },
                     type: "change",
                   };
-                  register("birthdate").onChange(event);
+                  register("birthday").onChange(event);
                 }}
               />
             </Label>
