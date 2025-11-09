@@ -25,7 +25,7 @@ export default function Checkout() {
   const hasTicket = seatSelection !== null;
   const hasMerch = cart.some((item) => item.kind === 'merch');
 
-  const ticketTotal = seatSelection ? seatSelection.price_cents : 0;
+  const ticketTotal = seatSelection ? seatSelection.price : 0;
   const merchTotal = cart
     .filter((item) => item.kind === 'merch')
     .reduce((sum, item) => sum + item.unit_price_cents * item.qty, 0);
@@ -68,8 +68,8 @@ export default function Checkout() {
 
   if (completed) {
     return (
-      <div className="min-h-screen bg-gradient-subtle py-8">
-        <div className="container max-w-2xl mx-auto px-4">
+      <div className="min-h-screen py-8 bg-gradient-subtle">
+        <div className="container max-w-2xl px-4 mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -77,20 +77,20 @@ export default function Checkout() {
           >
             <Card className="p-8 text-center">
               <div className="flex justify-center mb-4">
-                <div className="rounded-full bg-success/10 p-4">
-                  <Check className="h-12 w-12 text-success" />
+                <div className="p-4 rounded-full bg-success/10">
+                  <Check className="w-12 h-12 text-success" />
                 </div>
               </div>
 
-              <h1 className="text-3xl font-bold mb-3">¡Compra exitosa!</h1>
-              <p className="text-muted-foreground mb-6">
+              <h1 className="mb-3 text-3xl font-bold">¡Compra exitosa!</h1>
+              <p className="mb-6 text-muted-foreground">
                 Tu entrada ha sido confirmada. Revisa tu WhatsApp para ver el resumen completo.
               </p>
 
               {seatSelection && (
-                <Card className="p-4 bg-muted/50 mb-6">
+                <Card className="p-4 mb-6 bg-muted/50">
                   <div className="flex items-center gap-3">
-                    <Ticket className="h-8 w-8 text-primary" />
+                    <Ticket className="w-8 h-8 text-primary" />
                     <div className="text-left">
                       <p className="font-semibold">{seatSelection.section_name}</p>
                       <p className="text-sm text-muted-foreground">Gran Arena Monticello</p>
@@ -121,20 +121,20 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-subtle py-8">
-      <div className="container max-w-4xl mx-auto px-4">
+    <div className="min-h-screen py-8 bg-gradient-subtle">
+      <div className="container max-w-4xl px-4 mx-auto">
         <div className="grid lg:grid-cols-[1fr,400px] gap-6">
           {/* Order Summary */}
           <div className="space-y-6">
             <Card className="p-6">
               <div className="flex items-center gap-2 mb-6">
-                <ShoppingBag className="h-6 w-6 text-primary" />
+                <ShoppingBag className="w-6 h-6 text-primary" />
                 <h1 className="text-2xl font-bold">Resumen de compra</h1>
               </div>
 
               {/* Event Info */}
               <div className="mb-6">
-                <h3 className="font-semibold mb-2">Evento</h3>
+                <h3 className="mb-2 font-semibold">Evento</h3>
                 <Card className="p-4 bg-muted/50">
                   <p className="font-medium">Gran Arena Monticello</p>
                   <p className="text-sm text-muted-foreground">15 de Diciembre, 2025 - 20:00</p>
@@ -145,25 +145,25 @@ export default function Checkout() {
               {seatSelection ? (
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-2">
-                    <Ticket className="h-5 w-5 text-primary" />
+                    <Ticket className="w-5 h-5 text-primary" />
                     <h3 className="font-semibold">Tu entrada</h3>
                   </div>
                   <Card className="p-4">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-start justify-between mb-2">
                       <div>
                         <p className="font-medium">{seatSelection.section_name}</p>
                         <Badge variant="outline" className="mt-1">
                           {seatSelection.section_id}
                         </Badge>
                       </div>
-                      <p className="font-bold">{formatCurrency(seatSelection.price_cents)}</p>
+                      <p className="font-bold">{formatCurrency(seatSelection.price)}</p>
                     </div>
-                    <p className="text-xs text-muted-foreground">{seatSelection.motivo}</p>
+                    <p className="text-xs text-muted-foreground">{seatSelection.seat_name}</p>
                   </Card>
                 </div>
               ) : (
-                <Card className="p-6 text-center mb-6">
-                  <Ticket className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+                <Card className="p-6 mb-6 text-center">
+                  <Ticket className="w-12 h-12 mx-auto mb-3 opacity-50 text-muted-foreground" />
                   <p className="text-muted-foreground">
                     No has seleccionado un asiento aún
                   </p>
@@ -177,16 +177,16 @@ export default function Checkout() {
               {cart.length > 0 && (
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <Package className="h-5 w-5 text-accent" />
+                    <Package className="w-5 h-5 text-accent" />
                     <h3 className="font-semibold">Merchandise</h3>
                   </div>
                   <div className="space-y-2">
                     {cart.filter((item) => item.kind === 'merch').map((item, index) => (
                       <Card key={index} className="p-4">
-                        <div className="flex justify-between items-center">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <Badge variant="outline">{item.qty}x</Badge>
-                            <p className="font-medium text-sm">{item.name}</p>
+                            <p className="text-sm font-medium">{item.name}</p>
                           </div>
                           <p className="font-semibold">
                             {formatCurrency(item.unit_price_cents * item.qty)}
@@ -203,9 +203,9 @@ export default function Checkout() {
           {/* Payment Summary */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <Card className="p-6">
-              <h3 className="font-semibold mb-4">Total a pagar</h3>
+              <h3 className="mb-4 font-semibold">Total a pagar</h3>
 
-              <div className="space-y-3 mb-4">
+              <div className="mb-4 space-y-3">
                 {hasTicket && (
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Entrada</span>
@@ -236,7 +236,7 @@ export default function Checkout() {
               >
                 {processing ? (
                   <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Procesando...
                   </>
                 ) : (
@@ -244,15 +244,15 @@ export default function Checkout() {
                 )}
               </Button>
 
-              <p className="text-xs text-center text-muted-foreground mt-3">
+              <p className="mt-3 text-xs text-center text-muted-foreground">
                 Este es un pago simulado. No se realizará ningún cargo real.
               </p>
 
               {user && (
-                <Card className="p-3 bg-muted/50 mt-4">
+                <Card className="p-3 mt-4 bg-muted/50">
                   <p className="text-xs text-muted-foreground">
-                    <strong>Usuario:</strong> {user.name}<br />
-                    <strong>Teléfono:</strong> {user.phone}
+                    <strong>Usuario:</strong> {user.name} {user.lastname}<br />
+                    <strong>Teléfono:</strong>{user.phonePrefix} {user.phoneNumber}
                   </p>
                 </Card>
               )}

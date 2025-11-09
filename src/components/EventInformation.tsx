@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Card } from "@/components/ui/card";
 import { EventCategory } from "@/lib/fixtures";
 import { format } from "date-fns";
@@ -37,14 +38,14 @@ export function EventInformation() {
   const navigation = useNavigate();
   const { name, description, date, venue, image_url } =
     state.data as EventInformationProps;
-    const {seatSelection} = useStore();
-  const [selectedSection, setSelectedSection] = useState<string | null>(null);
-  const [seatSelected, setSeatSelected] = useState<string | null>(null);
+    const {setSeatSelection,seatSelection} = useStore();
+  /* const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [seatSelected, setSeatSelected] = useState<string | null>(null); */
   const [step, setStep] = useState<number>(0);
 
   const seats = Array.from({ length: 50 }).map((_, i) => ({
     id: `A${i}`,
-    section: selectedSection || "General",
+    section: seatSelection?.section_name || "General",
     row: String.fromCharCode(65 + Math.floor(i / 10)), // A, B, C...
     number: (i % 10) + 1,
     price: 45000 + Math.floor(Math.random() * 5000),
@@ -109,8 +110,15 @@ export function EventInformation() {
                     <Label className="w-full">
                       Selecciona una sección
                       <Select
-                        onValueChange={(value) => setSelectedSection(value)}
-                        value={selectedSection}
+                        onValueChange={(value) => {
+                            console.log('section',value)
+                            setSeatSelection({
+                                ...seatSelection,
+                                section_id:Math.random().toString(),
+                                section_name:value,
+                            })
+                        }}
+                        value={seatSelection?.section_name}
                         aria-label="País de residencia"
                       >
                         <SelectTrigger className="w-full px-3 py-2 mt-2 text-sm text-left bg-white border border-gray-300 rounded-md shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
@@ -119,7 +127,7 @@ export function EventInformation() {
                         <SelectContent>
                           <SelectGroup>
                             {SECTIONS_MONTICELLO.map((section) => (
-                              <SelectItem key={section.id} value={section.id}>
+                              <SelectItem key={section.id} value={section.name}>
                                 {section.name}
                               </SelectItem>
                             ))}
@@ -130,7 +138,7 @@ export function EventInformation() {
                   </div>
                   <Button
                     className="px-4 py-2 mt-6 text-white bg-purple-600 rounded-md hover:bg-purple-700 disabled:opacity-50"
-                    disabled={!selectedSection}
+                    disabled={!seatSelection?.section_name}
                     onClick={() => setStep(1)}
                   >
                     Continuar a la selección de asientos
@@ -146,13 +154,21 @@ export function EventInformation() {
                       seats={seats}
                       rows={["A", "B", "C", "D", "E"]}
                       cols={10}
-                      onSelect={(seat) => setSeatSelected(seat.id)}
+                      onSelect={(seat) => {
+                        setSeatSelection({
+                            ...seatSelection,
+                            seat_id:seat.id,
+                            seat_name:seat.section,
+                            seat_row:seat.row,
+                            price:seat.price
+                        })
+                      }}
                     />
                   </div>
                   <div className="flex justify-center w-full">
                     <Button
                       className="px-4 py-2 mt-6 text-white bg-purple-600 rounded-md hover:bg-purple-700 disabled:opacity-50"
-                      disabled={!seatSelected}
+                      disabled={!seatSelection?.seat_name}
                       onClick={() => {
                         navigation("/checkout");
                     }}

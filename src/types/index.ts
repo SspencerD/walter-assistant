@@ -1,12 +1,12 @@
 export type QueueStatus = "waiting" | "notified" | "expired";
 
 export type SeatOption = {
-  section_id: string;
+  section_id?: string;
   section_name: string;
-  score: number;
-  motivo: string;
-  preview_url: string;
-  price_cents: number;
+  seat_id?:string;
+  seat_name?:string;
+  seat_row?:string;
+  price: number;
 };
 
 export type MerchItem = {
