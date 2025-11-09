@@ -165,7 +165,7 @@ export default function Register() {
   const {setUser} = useStore();
   const { mutate, isPending, error } = useMutation({
     mutationFn: async (data: RegisterForm) => {
-      const response = await fetch(`${VITE_API_URL}users`, {
+      const response = await fetch(`${VITE_API_URL}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

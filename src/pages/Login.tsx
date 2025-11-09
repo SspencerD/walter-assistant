@@ -26,7 +26,7 @@ const Login = () => {
     });
     const { data,isPending,error } = useQuery({
   queryKey: ['users'],
-  queryFn: async () => fetch(`${VITE_API_URL}users`).then(res => res.json()),
+  queryFn: async () => fetch(`${VITE_API_URL}/api/users`).then(res => res.json()),
 });
 
 const onSubmit = (datos) => {
