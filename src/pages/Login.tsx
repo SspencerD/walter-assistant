@@ -8,15 +8,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useStore } from "@/store/useStore";
 const {VITE_API_URL} = import.meta.env;
 const schema = zod.object({
   email: zod.string().email("Correo electrónico inválido"),
-  password: zod.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  password: zod.string().min(3, "La contraseña debe tener al menos 3 caracteres"),
 });
 
 
 const Login = () => {
     const navigate = useNavigate();
+    const {setUser} = useStore();
     const { register, handleSubmit, formState: { errors, isDirty, isValid } } = useForm({
         resolver: zodResolver(schema),
         mode: "onChange",
@@ -27,13 +30,15 @@ const Login = () => {
 });
 
 const onSubmit = (datos) => {
-    console.log(datos);
-    console.log(data);
     if(data.some((user) => user.email === datos.email && user.password === datos.password)){
-        console.log("Inicio de sesión exitoso");
+        const findUser = data.find((user) => user.email === datos.email && user.password === datos.password);
+        const user = findUser;
+        toast.success('Inicio de sesión exitoso');
+        setUser(user);
         navigate("/");
+
     } else {
-        console.log("Credenciales inválidas");
+        toast.error("Credenciales inválidas");
     }
 }
 

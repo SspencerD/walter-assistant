@@ -16,6 +16,11 @@ import { SECTIONS_MONTICELLO } from "@/utils/Sections";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { SeatMatrix } from "@/components/SeatMatrix";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Loader } from "lucide-react";
+import { useStore } from "@/store/useStore";
+const {VITE_API_URL} = import.meta.env;
 
 interface EventInformationProps {
   id: string;
@@ -32,6 +37,7 @@ export function EventInformation() {
   const navigation = useNavigate();
   const { name, description, date, venue, image_url } =
     state.data as EventInformationProps;
+    const {seatSelection} = useStore();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [seatSelected, setSeatSelected] = useState<string | null>(null);
   const [step, setStep] = useState<number>(0);
@@ -46,7 +52,13 @@ export function EventInformation() {
     reducedVisibility: Math.random() > 0.8,
     reducedAccess: Math.random() > 0.9,
   }));
-  return (
+  const LoadScreen = () => (
+    <motion.div className="flex items-center justify-center min-h-screen">
+    <Loader className="w-12 h-12 text-gray-500 animate-spin" />
+      <p className="text-lg font-medium text-gray-700">Cargando información del evento...</p>
+    </motion.div>
+  )
+  return !state ? <LoadScreen /> : (
     <div className="flex flex-col items-center">
       <Card className="w-full p-6 mb-6">
         {image_url && (

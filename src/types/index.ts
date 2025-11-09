@@ -46,3 +46,23 @@ export type LockerInfo = {
   code: string;
   qr_png_b64: string;
 };
+
+// App-level event type (covers both API shape and legacy/mock shape)
+export type AppEvent = {
+  id: number | string;
+  name?: string;
+  artist?: string;
+  // API field
+  starts_at?: string;
+  // legacy/mock field
+  date?: string;
+  // venue
+  venue_name?: string;
+  venue?: string;
+  city?: string;
+  country?: string;
+  imgUrl?: string | null;
+  image_url?: string | null;
+  // allow extra fields
+  [key: string]: unknown;
+};

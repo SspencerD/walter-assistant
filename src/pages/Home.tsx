@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { mockEvents, mockVenues, EventCategory } from "@/lib/fixtures";
+import type { AppEvent } from "@/types";
 import { EventCard } from "@/components/EventCard";
 import { VenueCard } from "@/components/VenueCard";
 import {
@@ -12,6 +13,8 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Music, Trophy, Sparkles, Theater, Store } from "lucide-react";
+import { motion } from "framer-motion";
+import { useStore } from "@/store/useStore";
 
 const categoryIcons = {
   musica: Music,
@@ -32,6 +35,7 @@ const categoryLabels = {
 const Home = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<EventCategory | "all">("all");
+  const { setSelectedEvents } = useStore();
 
   const topSellerEvents = mockEvents.filter((e) => e.is_top_seller);
   const upcomingEvents = mockEvents.filter((e) => e.is_upcoming);
@@ -40,24 +44,17 @@ const Home = () => {
     ? mockEvents.filter((e) => !e.is_top_seller && !e.is_upcoming)
     : mockEvents.filter((e) => e.category === selectedCategory);
 
-  const handleEventClick = (event:{
-    id: string;
-    category: EventCategory;
-    name: string;
-    date: string;
-    venue: string;
-    image_url: string;
-
-  }) => {
-    const eventId = event.id
-    console.log("Event ID:", eventId);
+  const handleEventClick = (e: AppEvent) => {
+    const eventId = e && e.id;
     if (!eventId) return;
+    setSelectedEvents(e);
     // Navigate to queue with event context
-    navigate(`/event/${eventId}`, { state: { data: event } });
+    // navigate(`/event/${eventId}`, { state: { data: e } });
+    navigate('/queue');
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <motion.div className="min-h-screen bg-background">
       {/* Hero Carousel - Top Sellers */}
       <section className="px-4 py-8 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto max-w-7xl">
@@ -83,7 +80,7 @@ const Home = () => {
             <h2 className="mb-6 text-3xl font-bold">Próximamente</h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {upcomingEvents.map((event) => (
-                <EventCard key={event.id} event={event} onClick={() => handleEventClick(event.id)} />
+                <EventCard key={event.id} event={event} onClick={() => handleEventClick(event)} />
               ))}
             </div>
           </div>
@@ -118,7 +115,7 @@ const Home = () => {
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} onClick={() => handleEventClick(event.id)} />
+              <EventCard key={event.id} event={event} onClick={() => handleEventClick(event)} />
             ))}
           </div>
         </div>
@@ -138,7 +135,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

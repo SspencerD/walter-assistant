@@ -1,15 +1,47 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CartItem, QueueSlot, SeatOption, UserPreferences } from '@/types';
+import type { CartItem, QueueSlot, SeatOption, UserPreferences, AppEvent } from '@/types';
+import { EventCategory } from '@/lib/fixtures';
 
 interface StoreState {
   // User
   user: {
-    id: string;
+    id?: string;
     name: string;
-    phone: string;
+    lastname?: string;
+    birthday?: string;
+    country?: string;
+    phonePrefix?: string;
+    phoneNumber: string;
+    email?:string;
+    documentType?: string;
+    documentNumber?: string;
+    gender?: string;
+    consent?:boolean;
   } | null;
   setUser: (user: StoreState['user']) => void;
+
+  //Event
+  events: { 
+    id?: string;
+    category: EventCategory;
+      description: string;
+      name: string;
+      artist: string;
+      address: string;
+      city: string;
+      country: string;
+      capacity: number | null;
+      start_at: string | Date;
+      venue_name: string;
+      imgUrl?: string;
+  } | null;
+  setEvent: (event: StoreState['events']) => void;
+
+  // Selected events (UI state)
+  selectedEvents: AppEvent | null;
+  setSelectedEvents: (ev: AppEvent | null) => void;
+
 
   // Queue
   queue: QueueSlot | null;
@@ -30,6 +62,7 @@ interface StoreState {
   preferences: UserPreferences | null;
   setPreferences: (prefs: UserPreferences) => void;
 
+
   // WhatsApp notification
   whatsappConnected: boolean;
   setWhatsappConnected: (connected: boolean) => void;
@@ -38,8 +71,15 @@ interface StoreState {
 export const useStore = create<StoreState>()(
   persist(
     (set) => ({
-      user: { id: 'user-123', name: 'Usuario Demo', phone: '+56912345678' },
+     user: null,
       setUser: (user) => set({ user }),
+
+      events: null,
+      setEvent: (event) => set({ events: event }),
+
+      // selected event(s)
+      selectedEvents: null,
+      setSelectedEvents: (ev) => set({ selectedEvents: ev }),
 
       queue: null,
       setQueue: (queue) => set({ queue }),
@@ -78,6 +118,8 @@ export const useStore = create<StoreState>()(
 
       preferences: null,
       setPreferences: (prefs) => set({ preferences: prefs }),
+
+  
 
       whatsappConnected: false,
       setWhatsappConnected: (connected) => set({ whatsappConnected: connected }),

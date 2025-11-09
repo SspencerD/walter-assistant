@@ -12,7 +12,15 @@ interface EventCardProps {
 }
 
 export const EventCard = ({ event, onClick }: EventCardProps) => {
+  // Asegurarnos de que eventDate sea un objeto Date válido
+  // Convertir el string de fecha a objeto Date
   const eventDate = new Date(event.date);
+
+  // Validar que la fecha sea válida
+  if (isNaN(eventDate.getTime())) {
+    console.error('Fecha no válida:', event.date);
+    return null; // O mostrar un formato alternativo/placeholder
+  }
   
   return (
     <Card 

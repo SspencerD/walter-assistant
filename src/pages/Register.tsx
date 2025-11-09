@@ -19,7 +19,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { formatearRut } from "@/lib/rutFormat";
 import { format } from "date-fns";
-
+import { useNavigate } from "react-router-dom";
+import { useStore } from "@/store/useStore";
+import { toast } from 'sonner';
 const rutRegex = /^(\d{1,3}(?:\.\d{3}){2}-(\d{1}|[kK]))|(\d{1,3}(?:\d{3}){2}-(\d{1}|[kK]))$/;
 
 
@@ -159,6 +161,8 @@ interface RegisterForm {
 const { VITE_API_URL } = import.meta.env;
 
 export default function Register() {
+  const navigate = useNavigate();
+  const {setUser} = useStore();
   const { mutate, isPending, error } = useMutation({
     mutationFn: async (data: RegisterForm) => {
       const response = await fetch(`${VITE_API_URL}users`, {
@@ -222,8 +226,33 @@ export default function Register() {
       }
       const birthDates = format(date, 'yyyy-MM-dd');
       const payload = {...submitData, birthday: birthDates};
-      console.log('Payload data:', payload); // Para debug
-      mutate(payload);
+       mutate(payload, {
+    onSuccess: (serverResp) => {
+      // Construir el objeto user que quieres guardar en el store.
+      // Normalmente usarías la respuesta del servidor si devuelve id u otros campos.
+      const userToStore = {
+        id: serverResp?.id ?? 'user-temp',
+        name: payload.name,
+        lastname: payload.lastname,
+        birthday: payload.birthday,
+        country: payload.country,
+        phonePrefix: payload.phonePrefix,
+        phoneNumber: payload.phoneNumber,
+        email: payload.email,
+        documentType: payload.documentType,
+        documentNumber: payload.documentNumber,
+        gender: payload.gender,
+        consent: payload.consent,
+      };
+      setUser(userToStore);
+      toast.success('Registro exitoso');
+      navigate("/");
+    },
+    onError: (err) => {
+     toast.error('Error al registrar el usuario');
+    }
+  });
+
     } catch (error) {
       console.error('Error al procesar la fecha:', error);
     }

@@ -126,14 +126,14 @@ export type EventCategory = 'musica' | 'deportes' | 'espectaculo' | 'artes-teatr
 
 export type Event = {
   id: string;
-  name: string;
-  category: EventCategory;
+  name?: string;
+  category?: EventCategory;
   description?: string;
-  date: string;
-  venue: string;
-  venue_id: string;
-  image_url: string;
-  price_from_cents: number;
+  date?: string;
+  venue?: string;
+  venue_id?: string;
+  image_url?: string;
+  price_from_cents?: number;
   is_top_seller?: boolean;
   is_upcoming?: boolean;
 };

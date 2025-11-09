@@ -5,11 +5,12 @@ import logo from '@/assets/logo.webp';
 import { useStore } from '@/store/useStore';
 import { Button } from './button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 export function Navbar() {
   const location = useLocation();
   const cart = useStore((state) => state.cart);
   const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+  const {user} = useStore();
 
   const navItems = [
     { path: '/queue', label: 'Fila' },
@@ -19,12 +20,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center  max-w-7xl mx-auto px-4">
-        <Link to="/queue" className="flex items-center gap-3">
-          <img src={logo} alt="AudienceView" className="h-8 w-auto" />
+      <div className="container flex items-center h-16 px-4 mx-auto max-w-7xl">
+        <Link to="/" className="flex items-center gap-3">
+          <img src={logo} alt="AudienceView" className="w-auto h-8" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="items-center hidden gap-6 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -40,7 +41,7 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex items-center justify-end gap-4">
+        <div className="flex items-center justify-end gap-4 ml-auto">
           <Tooltip key={Math.random()}>
             <TooltipTrigger asChild>
 
@@ -51,9 +52,9 @@ export function Navbar() {
               asChild
             >
               <Link to="/checkout">
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className="w-5 h-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-brand-pink text-white text-xs flex items-center justify-center font-bold">
+                  <span className="absolute flex items-center justify-center w-5 h-5 text-xs font-bold text-white rounded-full -top-1 -right-1 bg-brand-pink">
                     {totalItems}
                   </span>
                 )}
@@ -66,6 +67,11 @@ export function Navbar() {
                           </div>
                         </TooltipContent>
           </Tooltip>
+          {user && user.name ? (
+            <span className="text-sm font-medium text-muted-foreground">
+              Hola, {user.name}
+            </span>
+          ) :(
           <Tooltip key={Math.random()}>
             <TooltipTrigger asChild>
             <Button
@@ -75,7 +81,7 @@ export function Navbar() {
               asChild
             >
               <Link to="/login">
-                <User className="h-5 w-5" />
+                <User className="w-5 h-5" />
               </Link>
             </Button>
           </TooltipTrigger >
@@ -85,11 +91,17 @@ export function Navbar() {
                           </div>
                         </TooltipContent>
           </Tooltip>
+          )}
         </div>
+        <Drawer>
+          <DrawerContent>
+            
+          </DrawerContent>
+        </Drawer>
       </div>
 
       {/* Mobile nav */}
-      <nav className="md:hidden flex items-center justify-around border-t px-4 py-2">
+    {/*   <nav className="flex items-center justify-around px-4 py-2 border-t md:hidden">
         {navItems.map((item) => (
           <Link
             key={item.path}
@@ -104,7 +116,7 @@ export function Navbar() {
             {item.label}
           </Link>
         ))}
-      </nav>
+      </nav> */}
     </header>
   );
 }
